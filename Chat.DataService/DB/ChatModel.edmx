@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ChatModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="friendships">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="FriendId" />
+          </Key>
+          <Property Name="UserId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="FriendId" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_friendship_FriendId_User_Id">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="friendships" Type="Self.friendships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="friendships">
+              <PropertyRef Name="FriendId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_friendship_UserId_User_Id">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="friendships" Type="Self.friendships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="friendships">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ChatModelStoreContainer">
+          <EntitySet Name="friendships" EntityType="Self.friendships" Schema="chat_system" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="chat_system" store:Type="Tables" />
+          <AssociationSet Name="FK_friendship_FriendId_User_Id" Association="Self.FK_friendship_FriendId_User_Id">
+            <End Role="user" EntitySet="user" />
+            <End Role="friendships" EntitySet="friendships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_friendship_UserId_User_Id" Association="Self.FK_friendship_UserId_User_Id">
+            <End Role="user" EntitySet="user" />
+            <End Role="friendships" EntitySet="friendships" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChatModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Friends" Relationship="Self.friendships" FromRole="user1" ToRole="user" />
+          <NavigationProperty Name="FriendFor" Relationship="ChatModel.friendships" FromRole="user" ToRole="user1" />
+        </EntityType>
+        <Association Name="friendships">
+          <End Role="user" Type="ChatModel.User" Multiplicity="*" />
+          <End Role="user1" Type="ChatModel.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ChatEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="ChatModel.User" />
+          <AssociationSet Name="friendships" Association="Self.friendships">
+            <End Role="user" EntitySet="Users" />
+            <End Role="user1" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChatModelStoreContainer" CdmEntityContainer="ChatEntities">
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ChatModel.User">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="friendships" TypeName="ChatModel.friendships" StoreEntitySet="friendships">
+            <EndProperty Name="user">
+              <ScalarProperty Name="Id" ColumnName="FriendId" />
+            </EndProperty>
+            <EndProperty Name="user1">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
