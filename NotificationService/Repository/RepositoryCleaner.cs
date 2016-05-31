@@ -14,8 +14,8 @@ namespace NotificationService.Repository
 
             //DisplayRepositoryState();
 
-            CheckClientsLastPingMessageDateTime();
-            CheckSocketConnection();
+            //CheckClientsLastPingMessageDateTime();    // TODO implement keep alive functionality
+            //CheckSocketConnection(); // TODO should notify also clients
         }
 
         //private static void DisplayRepositoryState()
@@ -35,7 +35,7 @@ namespace NotificationService.Repository
             }
         }
 
-        private static bool IsConnected(this Socket socket)
+        public static bool IsConnected(this Socket socket)
         {
             try
             {

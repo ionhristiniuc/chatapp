@@ -58,12 +58,22 @@
     <Compile Include="NSEntities\Messages\KeepAlive\KeepAliveRequest.cs" />
     <Compile Include="NSEntities\Messages\KeepAlive\KeepAliveResponse.cs" />
     <Compile Include="NSEntities\Messages\NSBaseMessage.cs" />
+    <Compile Include="NSEntities\Messages\P2PConnectivity\AllowFriendToConnectRequest.cs" />
+    <Compile Include="NSEntities\Messages\P2PConnectivity\AllowFriendToConnectResponse.cs" />
+    <Compile Include="NSEntities\Messages\P2PConnectivity\ConnectToFriendRequest.cs" />
+    <Compile Include="NSEntities\Messages\P2PConnectivity\ConnectToFriendResponse.cs" />
     <Compile Include="NSEntities\NSMessageTypeEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\UserModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\P2PCommunicationLibrary\P2PCommunicationLibrary.csproj">
+      <Project>{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}</Project>
+      <Name>P2PCommunicationLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

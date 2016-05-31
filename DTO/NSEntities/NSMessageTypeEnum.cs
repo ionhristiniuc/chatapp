@@ -19,6 +19,10 @@ namespace DTO.NSEntities
         NotifyClientOnlineRequest,
         NotifyClientOnlineResponse,
         NotifyClientOfflineRequest,
-        NotifyClientOfflineResponse
+        NotifyClientOfflineResponse,
+        ConnectToFriendRequest,
+        AllowFriendToConnectRequest,
+        AllowFriendToConnectResponse,
+        ConnectToFriendResponse
     }
 }

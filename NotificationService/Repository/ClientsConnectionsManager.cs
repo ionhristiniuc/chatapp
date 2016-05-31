@@ -91,9 +91,7 @@ NotifyContactsClientOnline(string clientId)
             }
         }
 
-        public static async 
-        Task
-NotifyContactsClientOffline(string clientId)
+        public static async Task NotifyContactsClientOffline(string clientId)
         {
             var onlineFriends = await OnlineFriendsConnections(clientId);
 

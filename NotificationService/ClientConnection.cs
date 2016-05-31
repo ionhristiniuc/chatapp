@@ -136,7 +136,8 @@ namespace NotificationService
 
         public void NotifyClientOffline(string clientId)
         {
-            SendObject(new NotifyClientOfflineRequest() { Contact = clientId });
+            if (_client.ClientSocket.IsConnected())
+                SendObject(new NotifyClientOfflineRequest() { Contact = clientId });
         }
 
         private bool InitClientAddress()

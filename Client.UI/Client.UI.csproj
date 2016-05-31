@@ -80,6 +80,7 @@
     <Compile Include="NSClient\Jobs\SetFriendOfflineJob.cs" />
     <Compile Include="NSClient\Jobs\SetFriendsOnlineJob.cs" />
     <Compile Include="NSClient\NSConnection.cs" />
+    <Compile Include="P2PCommunication\P2PConnectionsManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ClientForm.resx">

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Client.UI.NSClient;
 using Client.UI.NSClient.Jobs;
+using Client.UI.P2PCommunication;
 using DTO;
 using DTO.Entities;
 using Microsoft.Practices.ObjectBuilder2;
@@ -19,9 +20,10 @@ namespace Client.UI
     {
         private UserModel _user;
         private NSConnection _nsConnection;
+        private P2PConnectionsManager _p2PConnectionsManager;
 
         private readonly Color _onlineColor = Color.LightGreen;
-        private readonly Color _offlineColor = Color.AliceBlue;
+        private readonly Color _offlineColor = Color.Azure;
 
         public ClientForm(UserModel user)
         {                                
@@ -67,11 +69,9 @@ namespace Client.UI
             usersListView.EndUpdate();
         }
 
-        // Job helper methods
         public void SetFriendsOnline(string[] friends)
         {
             usersListView.BeginUpdate();
-            //MessageBox.Show("Show friends online called");
             foreach (ListViewItem item in usersListView.Items)
             {
                 if (friends.Contains(item.Text))
@@ -86,6 +86,33 @@ namespace Client.UI
                 .First();
 
             item.BackColor = _offlineColor;
+        }
+
+        private void sendButton_Click(object sender, EventArgs e)
+        {
+            var selectedUserId = usersListView.SelectedItems.Count != 0
+                   ? usersListView.SelectedItems[0].Name
+                   : null;
+
+            if (selectedUserId == null)
+                return;
+
+            var message = messagesTextArea.Text;
+
+            if (string.IsNullOrWhiteSpace(message))
+                return;
+
+            if (_p2PConnectionsManager.IsConnected(selectedUserId))
+            {
+                if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
+                {
+                    // update message area
+                }
+            }
+            else
+            {
+                // start process of connection to friend
+            }
         }
     }
 }
