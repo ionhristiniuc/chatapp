@@ -40,15 +40,24 @@ namespace Client.UI
 
             _nsConnection = new NSConnection(_user);
 
+            _p2PConnectionsManager.MessageReceivedEvent += MessageReceivedHandler;
+
             var progress = new Progress<IJob>(s => UpdateUI(s));
             Task.Factory.StartNew(() => _nsConnection.Process(progress),
                 TaskCreationOptions.LongRunning);
+        }
+
+        private void MessageReceivedHandler(string userId, string message)
+        {
+            // should play with windows
+            PrintMessage(userId, message);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
 
+            _p2PConnectionsManager.Stop();
             _nsConnection.Stop();
         }
 
@@ -97,22 +106,36 @@ namespace Client.UI
             if (selectedUserId == null)
                 return;
 
-            var message = messagesTextArea.Text;
+            var message = inputTextBox.Text;
 
             if (string.IsNullOrWhiteSpace(message))
                 return;
 
-            if (_p2PConnectionsManager.IsConnected(selectedUserId))
+            if (!_p2PConnectionsManager.IsConnected(selectedUserId))
             {
-                if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
+                if (!_p2PConnectionsManager.ConnectTo(selectedUserId))
                 {
-                    // update message area
+                    MessageBox.Show("Failed to connect to " + selectedUserId);
+                    return;
                 }
             }
-            else
+
+            if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
             {
-                // start process of connection to friend
+                PrintMessage(_user.Id, inputTextBox.Text);
+                inputTextBox.Text = string.Empty;
             }
+            else
+                MessageBox.Show("Failed to send message to " + selectedUserId);
+        }
+
+        private void PrintMessage(string userId, string message)
+        {
+            if (string.IsNullOrWhiteSpace(message))
+                return;
+
+            messagesTextArea.Text = messagesTextArea.Text + '\n'
+                       + $"{userId}> {message}";
         }
     }
 }
