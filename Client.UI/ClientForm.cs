@@ -23,12 +23,12 @@ namespace Client.UI
         private P2PConnectionsManager _p2PConnectionsManager;
 
         private readonly Color _onlineColor = Color.LightGreen;
-        private readonly Color _offlineColor = Color.Azure;
+        private readonly Color _offlineColor = Color.White;
 
         public ClientForm(UserModel user)
         {                                
             InitializeComponent();            
-            _user = user;
+            _user = user;                        
             PopulateFriends();                                 
         }
 
@@ -36,10 +36,11 @@ namespace Client.UI
         {
             base.OnLoad(e);
 
-            Text = _user.Id;
+            Text = $"{_user.Id}: {_user.FirstName} {_user.LastName}";
 
             _nsConnection = new NSConnection(_user);
 
+            _p2PConnectionsManager = new P2PConnectionsManager(_user, _nsConnection);
             _p2PConnectionsManager.MessageReceivedEvent += MessageReceivedHandler;
 
             var progress = new Progress<IJob>(s => UpdateUI(s));
@@ -74,7 +75,7 @@ namespace Client.UI
         private void PopulateFriends()
         {
             usersListView.BeginUpdate();
-            _user.Friends.ForEach(u => usersListView.Items.Add(new ListViewItem() {Text = u.Id, BackColor = _offlineColor, Name = u.Id} ));
+            _user.Friends.ForEach(u => usersListView.Items.Add(new ListViewItem() {Text = u.FirstName + " " + u.LastName, BackColor = _offlineColor, Name = u.Id} ));
             usersListView.EndUpdate();
         }
 
@@ -83,7 +84,7 @@ namespace Client.UI
             usersListView.BeginUpdate();
             foreach (ListViewItem item in usersListView.Items)
             {
-                if (friends.Contains(item.Text))
+                if (friends.Contains(item.Name))
                     item.BackColor = _onlineColor;
             }
             usersListView.EndUpdate();
@@ -113,20 +114,22 @@ namespace Client.UI
 
             if (!_p2PConnectionsManager.IsConnected(selectedUserId))
             {
-                if (!_p2PConnectionsManager.ConnectTo(selectedUserId))
+                if (!_p2PConnectionsManager.StartConnectTo(selectedUserId))
                 {
                     MessageBox.Show("Failed to connect to " + selectedUserId);
                     return;
                 }
             }
-
-            if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
-            {
-                PrintMessage(_user.Id, inputTextBox.Text);
-                inputTextBox.Text = string.Empty;
-            }
             else
-                MessageBox.Show("Failed to send message to " + selectedUserId);
+            {
+                if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
+                {
+                    PrintMessage(_user.Id, inputTextBox.Text);
+                    inputTextBox.Text = string.Empty;
+                }
+                else
+                    MessageBox.Show("Failed to send message to " + selectedUserId);
+            }
         }
 
         private void PrintMessage(string userId, string message)

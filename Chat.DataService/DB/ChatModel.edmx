@@ -19,6 +19,8 @@
           </Key>
           <Property Name="Id" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="45" />
+          <Property Name="LastName" Type="varchar" MaxLength="45" />
         </EntityType>
         <Association Name="FK_friendship_FriendId_User_Id">
           <End Role="user" Type="Self.user" Multiplicity="1" />
@@ -68,6 +70,8 @@
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Friends" Relationship="Self.friendships" FromRole="user1" ToRole="user" />
           <NavigationProperty Name="FriendFor" Relationship="ChatModel.friendships" FromRole="user" ToRole="user1" />
+          <Property Name="FirstName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="friendships">
           <End Role="user" Type="ChatModel.User" Multiplicity="*" />
@@ -89,6 +93,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="ChatModel.User">
               <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
               </MappingFragment>

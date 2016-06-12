@@ -19,16 +19,19 @@ using DTO.NSEntities.Messages;
 using DTO.NSEntities.Messages.Connectivity;
 using DTO.NSEntities.Messages.Contacts;
 using DTO.NSEntities.Messages.KeepAlive;
+using DTO.NSEntities.Messages.P2PConnectivity;
+using MessageReceivedEventHandler = Client.UI.P2PCommunication.MessageReceivedEventHandler;
 
 namespace Client.UI.NSClient
 {
-    class NSConnection
+    public class NSConnection
     {        
         private bool _isWorking;
         private IClient _nsClient;
         private IPEndPoint _nsAddress;
         private CommunicationUtils _communicationHelper = new CommunicationUtils();
         private readonly UserModel _user;
+        public event ObjectReceivedEventHandler ObjectReceivedEvent;
 
         public NSConnection(UserModel user)
         {
@@ -63,6 +66,8 @@ namespace Client.UI.NSClient
 
             while (objMess != null)
             {
+                //MessageBox.Show("NSConnection - Received " + objMess.MessageType);
+
                 ProcessMessage(objMess, progress);
                 
                 //Thread.Sleep(3000);
@@ -71,7 +76,7 @@ namespace Client.UI.NSClient
             }
         }
 
-        private void ProcessMessage(object obj, IProgress<IJob> progress)
+        private void ProcessMessage(NSBaseMessage obj, IProgress<IJob> progress)
         {            
             if (obj is ConnectResponse)
             {
@@ -99,9 +104,13 @@ namespace Client.UI.NSClient
                 IJob job = new SetFriendOfflineJob(req.Contact);
                 progress.Report(job);
             }
+            else
+            {
+                ObjectReceivedEvent?.Invoke(obj);
+            }
         }
 
-        private object ReadObject()
+        private NSBaseMessage ReadObject()
         {
             var message = _nsClient.Read();
             var objMess = _communicationHelper.GetMessageObject(message);
@@ -130,5 +139,18 @@ namespace Client.UI.NSClient
             SendDisconnectMessage();
             _isWorking = false;
         }
+
+        public bool SendConnectToFriendRequest(string userId)
+        {
+            SendObject(new ConnectToFriendRequest() {UserId = userId});
+            return true;
+        }
+
+        public void SendAllowFriendToConnectResponse(string userId)
+        {
+            SendObject(new AllowFriendToConnectResponse() {Allowed = true, UserId = userId});
+        }
     }
+
+    public delegate void ObjectReceivedEventHandler(NSBaseMessage o);
 }

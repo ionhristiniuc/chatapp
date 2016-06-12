@@ -76,11 +76,15 @@
       <DependentUpon>LogOnForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NSClient\Configuration\NSConfig.cs" />
+    <Compile Include="NSClient\Configuration\SuperPeerConfig.cs" />
     <Compile Include="NSClient\Jobs\IJob.cs" />
     <Compile Include="NSClient\Jobs\SetFriendOfflineJob.cs" />
     <Compile Include="NSClient\Jobs\SetFriendsOnlineJob.cs" />
     <Compile Include="NSClient\NSConnection.cs" />
+    <Compile Include="P2PCommunication\ClientPeerConnection.cs" />
+    <Compile Include="P2PCommunication\P2PConnection.cs" />
     <Compile Include="P2PCommunication\P2PConnectionsManager.cs" />
+    <Compile Include="P2PCommunication\ServerPeerConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ClientForm.resx">
@@ -124,6 +128,10 @@
     <ProjectReference Include="..\DTO\DTO.csproj">
       <Project>{C09EAEDD-C5CF-4151-8CEC-C5360F1498B7}</Project>
       <Name>DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\P2PCommunicationLibrary\P2PCommunicationLibrary.csproj">
+      <Project>{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}</Project>
+      <Name>P2PCommunicationLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

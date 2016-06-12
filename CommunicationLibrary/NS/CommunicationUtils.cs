@@ -6,6 +6,7 @@ using DTO.NSEntities.Messages;
 using DTO.NSEntities.Messages.Connectivity;
 using DTO.NSEntities.Messages.Contacts;
 using DTO.NSEntities.Messages.KeepAlive;
+using DTO.NSEntities.Messages.P2PConnectivity;
 
 namespace CommunicationLibrary.NS
 {
@@ -59,6 +60,14 @@ namespace CommunicationLibrary.NS
                     return _serializer.Deserialize<NotifyClientOfflineRequest>(str);
                 case NSMessageTypeEnum.NotifyClientOfflineResponse:
                     return _serializer.Deserialize<NotifyClientOfflineResponse>(str);
+                case NSMessageTypeEnum.ConnectToFriendRequest:
+                    return _serializer.Deserialize<ConnectToFriendRequest>(str);
+                case NSMessageTypeEnum.ConnectToFriendResponse:
+                    return _serializer.Deserialize<ConnectToFriendResponse>(str);
+                case NSMessageTypeEnum.AllowFriendToConnectRequest:
+                    return _serializer.Deserialize<AllowFriendToConnectRequest>(str);
+                case NSMessageTypeEnum.AllowFriendToConnectResponse:
+                    return _serializer.Deserialize<AllowFriendToConnectResponse>(str);
                 default:
                     throw new ArgumentException("Unexpected message type " + nsBase.MessageType);
             }

@@ -54,7 +54,10 @@ namespace NotificationService.Repository
         {
             lock (ClientsMonitor)
             {
-                return Clients[username];
+                if (Clients.ContainsKey(username))
+                    return Clients[username];
+                else
+                    return null;
             }
         }
         #endregion

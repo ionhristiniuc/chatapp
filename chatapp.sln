@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationLibrary", "Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P2PCommunicationLibrary", "P2PCommunicationLibrary\P2PCommunicationLibrary.csproj", "{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperPeerApp", "SuperPeerApp\SuperPeerApp.csproj", "{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{71D23549-2E49-4A32-8F33-754330620C6D}</ProjectGuid>
+    <ProjectGuid>{B08A7EE1-D4CB-45F6-BE51-A785EAB9E705}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NotificationService</RootNamespace>
-    <AssemblyName>NotificationService</AssemblyName>
+    <RootNamespace>SuperPeerApp</RootNamespace>
+    <AssemblyName>SuperPeerApp</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,37 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientConnection.cs" />
-    <Compile Include="NotificationServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\ClientsConnectionsManager.cs" />
-    <Compile Include="Repository\Entities\ClientInfo.cs" />
-    <Compile Include="Repository\RepositoryCleaner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommunicationLibrary\CommunicationLibrary.csproj">
-      <Project>{7FC1F8CE-E985-4C81-B945-92A43FFD3164}</Project>
-      <Name>CommunicationLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataServiceClient\DataServiceClient.csproj">
-      <Project>{cec71ac6-dd7a-417f-a6fe-bbe8057e3d72}</Project>
-      <Name>DataServiceClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DTO\DTO.csproj">
-      <Project>{c09eaedd-c5cf-4151-8cec-c5360f1498b7}</Project>
-      <Name>DTO</Name>
-    </ProjectReference>
     <ProjectReference Include="..\P2PCommunicationLibrary\P2PCommunicationLibrary.csproj">
-      <Project>{2af1e3fe-6fcc-4aa4-a0ae-7e7dd7cd4930}</Project>
+      <Project>{2AF1E3FE-6FCC-4AA4-A0AE-7E7DD7CD4930}</Project>
       <Name>P2PCommunicationLibrary</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,25 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CommunicationLibrary.Util.Serialization;
+using DTO.P2PEntities.Messages;
+using P2PCommunicationLibrary;
 using P2PCommunicationLibrary.SimplePeers.ClientPeer;
 
 namespace Client.UI.P2PCommunication
 {
     public class ClientPeerConnection : P2PConnection
-    {
-        public ClientPeer Peer { get; set; }
+    {        
+        public ClientPeer Peer { get; set; }        
 
-        public override bool SendMessage(string message)
+        public ClientPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEventHandler onMessageReceivedEvent)
+            : base(new JsonSerializer())
         {
-            //Peer.Send();   // Maybe should send objects
+            MessageReceivedEvent = onMessageReceivedEvent;
+            Peer = new ClientPeer(superPeerEndPoint);
+        }
+
+        public override bool SendMessage(P2PMessageBase message)
+        {
+            var bytes = GetBytes(message);
+            Peer.Send(bytes);
             return true;
         }
 
         public override void Stop()
         {
             Peer.Close();
+        }
+
+        public override void Run()
+        {
+            Peer.Run();
+        }
+
+        public void Connect(PeerAddress address)
+        {
+            Peer.Connect(address);
+        }
+
+        public override void ReadMessages()
+        {
+            IsListening = true;            
+
+            while (IsListening)
+            {
+                var data = Peer.Read();
+                var message = GetMessage(data);
+
+                if (message is TextMessage)
+                {
+                    MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
+                }
+            }
         }
     }
 }
