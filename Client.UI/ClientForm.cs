@@ -12,11 +12,12 @@ using Client.UI.NSClient.Jobs;
 using Client.UI.P2PCommunication;
 using DTO;
 using DTO.Entities;
+using MetroFramework.Forms;
 using Microsoft.Practices.ObjectBuilder2;
 
 namespace Client.UI
 {
-    public partial class ClientForm : Form
+    public partial class ClientForm : MetroForm
     {
         private UserModel _user;
         private NSConnection _nsConnection;
@@ -29,6 +30,8 @@ namespace Client.UI
         private Dictionary<string, string> _connectionMessages = new Dictionary<string, string>();
         private string SelectedUser { get; set; }
 
+        private const string NewLine = "<div style=\"display: block;\"></div>";
+
         public ClientForm(UserModel user)
         {                                
             InitializeComponent();            
@@ -37,14 +40,14 @@ namespace Client.UI
             {
                 UserId = f.Id, Input = string.Empty, TextArea = string.Empty
             });
-            PopulateFriends();                                 
+            PopulateFriends();            
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            Text = $"{_user.Id}: {_user.FirstName} {_user.LastName}";
+            nametTitle.Text = $"{_user.Id}: {_user.FirstName} {_user.LastName}";
 
             _nsConnection = new NSConnection(_user);
 
@@ -168,18 +171,18 @@ namespace Client.UI
             {
                 if (userId == _user.Id)
                 {
-                    messagesTextArea.Text = messagesTextArea.Text + '\n'
-                                            + $"Me> {message}";
+                    messagesTextArea.Text = messagesTextArea.Text + NewLine
+                                            + $"<b>Me:</b> {message}";
                 } 
                 else if (SelectedUser != null && SelectedUser == userId)
                 {
-                    messagesTextArea.Text = messagesTextArea.Text + '\n'
-                                            + $"{user.FirstName} {user.LastName}> {message}";
+                    messagesTextArea.Text = messagesTextArea.Text + NewLine
+                                            + $"<b>{user.FirstName} {user.LastName}:</b> {message}";                    
                 }
                 else
                 {
                     var conv = _conversations[userId];
-                    conv.TextArea +=  '\n' + $"{user.FirstName} {user.LastName}> {message}";
+                    conv.TextArea += NewLine + $"<b>{user.FirstName} {user.LastName}:</b> {message}";
                     // mark as new message received
                 }
             });            

@@ -28,86 +28,122 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.usernameTextBox = new System.Windows.Forms.TextBox();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.connectBtn = new System.Windows.Forms.Button();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
+            this.connectBtn = new MetroFramework.Controls.MetroButton();
+            this.usernameTextBox = new MetroFramework.Controls.MetroTextBox();
+            this.passwordTextBox = new MetroFramework.Controls.MetroTextBox();
             this.SuspendLayout();
             // 
-            // label1
+            // metroLabel1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.label1.Location = new System.Drawing.Point(45, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Username:";
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(154, 124);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(71, 19);
+            this.metroLabel1.TabIndex = 5;
+            this.metroLabel1.Text = "Username:";
             // 
-            // usernameTextBox
+            // metroLabel2
             // 
-            this.usernameTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.usernameTextBox.Location = new System.Drawing.Point(50, 59);
-            this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(240, 25);
-            this.usernameTextBox.TabIndex = 1;
-            // 
-            // passwordTextBox
-            // 
-            this.passwordTextBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordTextBox.Location = new System.Drawing.Point(50, 122);
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(240, 25);
-            this.passwordTextBox.TabIndex = 3;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.label2.Location = new System.Drawing.Point(45, 99);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Password:";
+            this.metroLabel2.AutoSize = true;
+            this.metroLabel2.Location = new System.Drawing.Point(154, 188);
+            this.metroLabel2.Name = "metroLabel2";
+            this.metroLabel2.Size = new System.Drawing.Size(66, 19);
+            this.metroLabel2.TabIndex = 6;
+            this.metroLabel2.Text = "Password:";
             // 
             // connectBtn
             // 
-            this.connectBtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.connectBtn.Location = new System.Drawing.Point(110, 171);
+            this.connectBtn.FontSize = MetroFramework.MetroButtonSize.Medium;
+            this.connectBtn.Location = new System.Drawing.Point(212, 260);
             this.connectBtn.Name = "connectBtn";
-            this.connectBtn.Size = new System.Drawing.Size(114, 43);
-            this.connectBtn.TabIndex = 4;
+            this.connectBtn.Size = new System.Drawing.Size(102, 38);
+            this.connectBtn.TabIndex = 2;
             this.connectBtn.Text = "Connect";
-            this.connectBtn.UseVisualStyleBackColor = true;
+            this.connectBtn.UseSelectable = true;
             this.connectBtn.Click += new System.EventHandler(this.connectBtn_Click);
+            // 
+            // usernameTextBox
+            // 
+            // 
+            // 
+            // 
+            this.usernameTextBox.CustomButton.Image = null;
+            this.usernameTextBox.CustomButton.Location = new System.Drawing.Point(218, 1);
+            this.usernameTextBox.CustomButton.Name = "";
+            this.usernameTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.usernameTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.usernameTextBox.CustomButton.TabIndex = 1;
+            this.usernameTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.usernameTextBox.CustomButton.UseSelectable = true;
+            this.usernameTextBox.CustomButton.Visible = false;
+            this.usernameTextBox.Lines = new string[0];
+            this.usernameTextBox.Location = new System.Drawing.Point(154, 146);
+            this.usernameTextBox.MaxLength = 32767;
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.PasswordChar = '\0';
+            this.usernameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.usernameTextBox.SelectedText = "";
+            this.usernameTextBox.SelectionLength = 0;
+            this.usernameTextBox.SelectionStart = 0;
+            this.usernameTextBox.Size = new System.Drawing.Size(240, 23);
+            this.usernameTextBox.TabIndex = 0;
+            this.usernameTextBox.UseSelectable = true;
+            this.usernameTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.usernameTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
+            // 
+            // passwordTextBox
+            // 
+            // 
+            // 
+            // 
+            this.passwordTextBox.CustomButton.Image = null;
+            this.passwordTextBox.CustomButton.Location = new System.Drawing.Point(218, 1);
+            this.passwordTextBox.CustomButton.Name = "";
+            this.passwordTextBox.CustomButton.Size = new System.Drawing.Size(21, 21);
+            this.passwordTextBox.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
+            this.passwordTextBox.CustomButton.TabIndex = 1;
+            this.passwordTextBox.CustomButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            this.passwordTextBox.CustomButton.UseSelectable = true;
+            this.passwordTextBox.CustomButton.Visible = false;
+            this.passwordTextBox.Lines = new string[0];
+            this.passwordTextBox.Location = new System.Drawing.Point(154, 210);
+            this.passwordTextBox.MaxLength = 32767;
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '\0';
+            this.passwordTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.passwordTextBox.SelectedText = "";
+            this.passwordTextBox.SelectionLength = 0;
+            this.passwordTextBox.SelectionStart = 0;
+            this.passwordTextBox.Size = new System.Drawing.Size(240, 23);
+            this.passwordTextBox.TabIndex = 1;
+            this.passwordTextBox.UseSelectable = true;
+            this.passwordTextBox.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            this.passwordTextBox.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // LogOnForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(334, 226);
-            this.Controls.Add(this.connectBtn);
+            this.ClientSize = new System.Drawing.Size(557, 363);
             this.Controls.Add(this.passwordTextBox);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.usernameTextBox);
-            this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Controls.Add(this.connectBtn);
+            this.Controls.Add(this.metroLabel2);
+            this.Controls.Add(this.metroLabel1);
             this.Name = "LogOnForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Chat Application";
+            this.ShadowType = MetroFramework.Forms.MetroFormShadowType.DropShadow;
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox usernameTextBox;
-        private System.Windows.Forms.TextBox passwordTextBox;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button connectBtn;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroLabel metroLabel2;
+        private MetroFramework.Controls.MetroButton connectBtn;
+        private MetroFramework.Controls.MetroTextBox usernameTextBox;
+        private MetroFramework.Controls.MetroTextBox passwordTextBox;
     }
 }

@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataServiceClient.Services;
+using MetroFramework.Forms;
 
 namespace Client.UI
 {
-    public partial class LogOnForm : Form
+    public partial class LogOnForm : MetroForm
     {        
         public LogOnForm()
         {
