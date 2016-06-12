@@ -35,6 +35,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usersListView = new System.Windows.Forms.ListView();
+            this.selectedUserLabel = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -106,12 +107,22 @@
             this.usersListView.TabIndex = 5;
             this.usersListView.UseCompatibleStateImageBehavior = false;
             this.usersListView.View = System.Windows.Forms.View.List;
+            this.usersListView.SelectedIndexChanged += new System.EventHandler(this.usersListView_SelectedIndexChanged);
+            // 
+            // selectedUserLabel
+            // 
+            this.selectedUserLabel.AutoSize = true;
+            this.selectedUserLabel.Location = new System.Drawing.Point(555, 9);
+            this.selectedUserLabel.Name = "selectedUserLabel";
+            this.selectedUserLabel.Size = new System.Drawing.Size(0, 13);
+            this.selectedUserLabel.TabIndex = 6;
             // 
             // ClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(672, 362);
+            this.Controls.Add(this.selectedUserLabel);
             this.Controls.Add(this.usersListView);
             this.Controls.Add(this.sendButton);
             this.Controls.Add(this.inputTextBox);
@@ -137,6 +148,7 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ListView usersListView;
+        private System.Windows.Forms.Label selectedUserLabel;
     }
 }
 

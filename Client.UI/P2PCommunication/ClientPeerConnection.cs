@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CommunicationLibrary.Util.Serialization;
 using DTO.NSEntities;
 using DTO.P2PEntities.Messages;
@@ -16,10 +18,12 @@ namespace Client.UI.P2PCommunication
     {        
         public ClientPeer Peer { get; set; }        
 
-        public ClientPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent)
+        public ClientPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent,
+            ConnectionClosedEvent onConnectionClosedEvent)
             : base(new JsonSerializer())
         {
             MessageReceivedEvent = onMessageReceivedEvent;
+            ConnectionClosedEvent = onConnectionClosedEvent;
             Peer = new ClientPeer(superPeerEndPoint);
         }
 
@@ -48,17 +52,31 @@ namespace Client.UI.P2PCommunication
 
         public override void ReadMessages()
         {
-            IsListening = true;            
+            IsListening = true;
 
-            while (IsListening)
+            try
             {
-                var data = Peer.Read();
-                var message = GetMessage(data);
-
-                if (message is TextMessage)
+                while (IsListening)
                 {
-                    MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
+                    var data = Peer.Read();
+                    var message = GetMessage(data);
+
+                    if (message is TextMessage)
+                    {
+                        MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show("An error occurred while reading messages for user " + UserId
+                //                + " : " + e);
+                Trace.TraceWarning("An error occurred while reading messages for user " + UserId
+                                   + " : " + e);
+            }
+            finally
+            {
+                ConnectionClosedEvent?.Invoke(UserId);
             }
         }
 

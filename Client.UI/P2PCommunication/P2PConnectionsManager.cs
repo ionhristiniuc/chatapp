@@ -20,6 +20,7 @@ namespace Client.UI.P2PCommunication
     {
         public event MessageReceivedEvent MessageReceivedEvent;
         public event ConnectedToFriendEvent ConnectedToFriendEvent;
+        public event ConnectionClosedEvent ConnectionClosedEvent;
         private IList<P2PConnection> _connections = new List<P2PConnection>();
         private UserModel _user;
         private readonly NSConnection _nsConnection;
@@ -30,8 +31,14 @@ namespace Client.UI.P2PCommunication
             _user = user;
             _nsConnection = nsConnection;
             _nsConnection.ObjectReceivedEvent += NsConnectionOnObjectReceivedEvent;
+            ConnectionClosedEvent += OnConnectionClosedEvent;
             _superPeerEndPoint = new IPEndPoint(IPAddress.Parse(SuperPeerConfig.Url), SuperPeerConfig.Port);
-        }        
+        }
+
+        private void OnConnectionClosedEvent(string userId)
+        {
+            RemoveConnectionIfAny(userId);
+        }
 
         public bool IsConnected(string userId)
         {
@@ -50,7 +57,7 @@ namespace Client.UI.P2PCommunication
 
         public bool StartConnectTo(string userId)
         {
-            var conn = new ClientPeerConnection(_superPeerEndPoint, MessageReceivedEvent) { UserId = userId };
+            var conn = new ClientPeerConnection(_superPeerEndPoint, MessageReceivedEvent, ConnectionClosedEvent) { UserId = userId };
             conn.Run();
             _connections.Add(conn);
             return _nsConnection.SendConnectToFriendRequest(userId, conn.GetPeerAddress());
@@ -71,7 +78,7 @@ namespace Client.UI.P2PCommunication
             {
                 var req = (AllowFriendToConnectRequest)nsBaseMessage;
                 var address = req.Address.ToPeerAddress();                
-                var conn = new ServerPeerConnection(_superPeerEndPoint, MessageReceivedEvent) {UserId = req.UserId};
+                var conn = new ServerPeerConnection(_superPeerEndPoint, MessageReceivedEvent, ConnectionClosedEvent) {UserId = req.UserId};
                 conn.Run();
                 _connections.Add(conn);
                 Task.Factory.StartNew(() => conn.AllowConnection(address))
@@ -86,8 +93,20 @@ namespace Client.UI.P2PCommunication
         {
             _connections.ForEach(c => c.Stop());
         }
+
+        public void RemoveConnectionIfAny(string friend)
+        {
+            var conn = _connections.FirstOrDefault(c => c.UserId == friend);
+
+            if (conn != null)
+            {
+                conn.Stop();
+                _connections.Remove(conn);
+            }
+        }
     }
 
     public delegate void MessageReceivedEvent(string userId, string message);
     public delegate void ConnectedToFriendEvent(string userId);
+    public delegate void ConnectionClosedEvent(string userId);
 }

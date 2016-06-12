@@ -22,6 +22,8 @@ namespace Client.UI.P2PCommunication
 
         public MessageReceivedEvent MessageReceivedEvent { get; set; }
 
+        public ConnectionClosedEvent ConnectionClosedEvent { get; set; }
+
         public string UserId { get; set; }
 
         public abstract bool SendMessage(P2PMessageBase message);

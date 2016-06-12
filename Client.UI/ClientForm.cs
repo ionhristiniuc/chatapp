@@ -21,16 +21,22 @@ namespace Client.UI
         private UserModel _user;
         private NSConnection _nsConnection;
         private P2PConnectionsManager _p2PConnectionsManager;
+        private Dictionary<string, Conversation> _conversations; 
 
         private readonly Color _onlineColor = Color.LightGreen;
         private readonly Color _offlineColor = Color.White;
 
-        private Dictionary<string, string> _connectionMessages = new Dictionary<string, string>(); 
+        private Dictionary<string, string> _connectionMessages = new Dictionary<string, string>();
+        private string SelectedUser { get; set; }
 
         public ClientForm(UserModel user)
         {                                
             InitializeComponent();            
-            _user = user;                        
+            _user = user;
+            _conversations = _user.Friends.ToDictionary(f => f.Id, f => new Conversation()
+            {
+                UserId = f.Id, Input = string.Empty, TextArea = string.Empty
+            });
             PopulateFriends();                                 
         }
 
@@ -58,13 +64,15 @@ namespace Client.UI
             if (_p2PConnectionsManager.SendMessage(userId, message))
             {
                 PrintMessage(_user.Id, message);
-                inputTextBox.Text = string.Empty;
+                this.Invoke((MethodInvoker) delegate
+                {
+                    inputTextBox.Text = string.Empty;
+                });
             }
         }
 
         private void MessageReceivedHandler(string userId, string message)
-        {
-            // should play with windows            
+        {              
             PrintMessage(userId, message);
         }
 
@@ -111,13 +119,13 @@ namespace Client.UI
                 .First();
 
             item.BackColor = _offlineColor;
+
+            _p2PConnectionsManager.RemoveConnectionIfAny(friend);
         }
 
         private void sendButton_Click(object sender, EventArgs e)
         {
-            var selectedUserId = usersListView.SelectedItems.Count != 0
-                   ? usersListView.SelectedItems[0].Name
-                   : null;
+            var selectedUserId = GetSelectedUserId();
 
             if (selectedUserId == null)
                 return;
@@ -141,8 +149,8 @@ namespace Client.UI
             {
                 if (_p2PConnectionsManager.SendMessage(selectedUserId, message))
                 {
-                    PrintMessage(_user.Id, inputTextBox.Text);
-                    inputTextBox.Text = string.Empty;
+                    PrintMessage(_user.Id, inputTextBox.Text);                    
+                    inputTextBox.Text = string.Empty;                    
                 }
                 else
                     MessageBox.Show("Failed to send message to " + selectedUserId);
@@ -156,10 +164,87 @@ namespace Client.UI
 
             var user = _user.Id == userId ? _user : _user.Friends.First(u => u.Id == userId);
 
-            this.Invoke((MethodInvoker)delegate {
-                messagesTextArea.Text = messagesTextArea.Text + '\n'
-                       + $"{user.FirstName} {user.LastName}> {message}";
+            this.Invoke((MethodInvoker)delegate 
+            {
+                if (userId == _user.Id)
+                {
+                    messagesTextArea.Text = messagesTextArea.Text + '\n'
+                                            + $"Me> {message}";
+                } 
+                else if (SelectedUser != null && SelectedUser == userId)
+                {
+                    messagesTextArea.Text = messagesTextArea.Text + '\n'
+                                            + $"{user.FirstName} {user.LastName}> {message}";
+                }
+                else
+                {
+                    var conv = _conversations[userId];
+                    conv.TextArea +=  '\n' + $"{user.FirstName} {user.LastName}> {message}";
+                    // mark as new message received
+                }
             });            
+        }
+
+        private void usersListView_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+            var selected = GetSelectedUserId();
+                             
+            if (selected != null && selected != SelectedUser)
+            {
+                var lastSelUser = SelectedUser;
+
+                if (lastSelUser != null)
+                {
+                    SaveConversation(lastSelUser);
+                }
+
+                ShowConversation(selected);
+            }
+            else if (selected == null && SelectedUser != null)
+            {
+                SaveConversation(SelectedUser);
+                ClearInputs();
+            }
+
+            selectedUserLabel.Text = string.Empty;
+            SelectedUser = selected;
+            if (selected != null)
+            {
+                var user = GetFriend(selected);
+                selectedUserLabel.Text = user.FirstName + " " + user.LastName;
+            }                                        
+        }
+
+        private UserModel GetFriend(string userId)
+        {
+            return _user.Friends.FirstOrDefault(f => f.Id == userId);
+        }
+
+        private void ClearInputs()
+        {
+            inputTextBox.Text = string.Empty;
+            messagesTextArea.Text = string.Empty;
+        }
+
+        private void ShowConversation(string selected)
+        {
+            var selConv = _conversations[selected];
+            inputTextBox.Text = selConv.Input;
+            messagesTextArea.Text = selConv.TextArea;
+        }
+
+        private void SaveConversation(string lastSelUser)
+        {
+            var lastSelUserConv = _conversations[lastSelUser];
+            lastSelUserConv.TextArea = messagesTextArea.Text;
+            lastSelUserConv.Input = inputTextBox.Text;
+        }
+
+        private string GetSelectedUserId()
+        {
+            return usersListView.SelectedItems.Count != 0
+                   ? usersListView.SelectedItems[0].Name
+                   : null;
         }
     }
 }

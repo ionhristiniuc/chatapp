@@ -69,6 +69,7 @@
     <Compile Include="ClientForm.Designer.cs">
       <DependentUpon>ClientForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Conversation.cs" />
     <Compile Include="LogOnForm.cs">
       <SubType>Form</SubType>
     </Compile>

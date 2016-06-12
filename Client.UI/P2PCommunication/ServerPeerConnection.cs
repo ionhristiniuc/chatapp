@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,10 +18,12 @@ namespace Client.UI.P2PCommunication
     {
         public ServerPeer Peer { get; set; }
 
-        public ServerPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent)
+        public ServerPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent,
+            ConnectionClosedEvent onConnectionClosedEvent)
             : base(new JsonSerializer())
         {
             MessageReceivedEvent = onMessageReceivedEvent;
+            ConnectionClosedEvent = onConnectionClosedEvent;
             Peer = new ServerPeer(superPeerEndPoint, 0);   
         }        
 
@@ -37,15 +40,29 @@ namespace Client.UI.P2PCommunication
 
             //MessageBox.Show(UserId + " - Reading messages ...");
 
-            while (IsListening)
+            try
             {
-                var data = Peer.Read();
-                var message = GetMessage(data);
-
-                if (message is TextMessage)
+                while (IsListening)
                 {
-                    MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
+                    var data = Peer.Read();
+                    var message = GetMessage(data);
+
+                    if (message is TextMessage)
+                    {
+                        MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                //MessageBox.Show("ServerPeerConnection.ReadMessages - An error occurred while reading messages for user "
+                //                + UserId + " : " + e);
+                Trace.TraceWarning("ClientPeerConnection.ReadMessages - An error occurred while reading messages for user "
+                                   + UserId + " : " + e);
+            }
+            finally
+            {
+                ConnectionClosedEvent?.Invoke(UserId);
             }
         }
 
