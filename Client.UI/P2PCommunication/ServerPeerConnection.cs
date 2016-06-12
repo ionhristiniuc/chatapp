@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommunicationLibrary.Util.Serialization;
+using DTO.NSEntities;
 using DTO.P2PEntities.Messages;
 using P2PCommunicationLibrary;
 using P2PCommunicationLibrary.SimplePeers.ServerPeer;
@@ -16,11 +17,11 @@ namespace Client.UI.P2PCommunication
     {
         public ServerPeer Peer { get; set; }
 
-        public ServerPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEventHandler onMessageReceivedEvent)
+        public ServerPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent)
             : base(new JsonSerializer())
         {
             MessageReceivedEvent = onMessageReceivedEvent;
-            Peer = new ServerPeer(superPeerEndPoint, 10020);   // ??? port
+            Peer = new ServerPeer(superPeerEndPoint, 0);   
         }        
 
         public override bool SendMessage(P2PMessageBase message)
@@ -34,7 +35,7 @@ namespace Client.UI.P2PCommunication
         {
             IsListening = true;
 
-            MessageBox.Show("Reading messages ...");
+            //MessageBox.Show(UserId + " - Reading messages ...");
 
             while (IsListening)
             {
@@ -57,6 +58,11 @@ namespace Client.UI.P2PCommunication
         public override void Run()
         {
             Peer.Run();
+        }
+
+        public override PeerAddressContract GetPeerAddress()
+        {
+            return new PeerAddressContract(Peer.GetPeerAddress());
         }
 
         public void AllowConnection(PeerAddress address)

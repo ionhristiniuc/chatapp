@@ -111,9 +111,9 @@ namespace NotificationService
                     return; // should send an error message
                 }
 
-                var address = new P2PCommunicationLibrary.PeerAddress(
-                    Info.PeerAddress().PrivateEndPoint, Info.PeerAddress().PublicEndPoint);
-                contact.SendObject(new AllowFriendToConnectRequest() {Address = new PeerAddressContract(address), UserId = Info.Username});
+                //var address = new P2PCommunicationLibrary.PeerAddress(
+                //    Info.PeerAddress().PrivateEndPoint, Info.PeerAddress().PublicEndPoint);
+                contact.SendObject(new AllowFriendToConnectRequest() {Address = req.Address, UserId = Info.Username});
             }  
             else if (obj is AllowFriendToConnectResponse)
             {
@@ -125,10 +125,10 @@ namespace NotificationService
                     return; // should send an error message
                 }
 
-                var address = new P2PCommunicationLibrary.PeerAddress(
-                    Info.PeerAddress().PrivateEndPoint, Info.PeerAddress().PublicEndPoint);
+                //var address = new P2PCommunicationLibrary.PeerAddress(
+                //    Info.PeerAddress().PrivateEndPoint, Info.PeerAddress().PublicEndPoint);
 
-                contact.SendObject(new ConnectToFriendResponse() {Address = new PeerAddressContract(address),
+                contact.SendObject(new ConnectToFriendResponse() {Address = resp.PeerAddress,
                     UserId = Info.Username});
             }         
             else

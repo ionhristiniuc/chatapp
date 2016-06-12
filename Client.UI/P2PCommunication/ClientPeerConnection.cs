@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CommunicationLibrary.Util.Serialization;
+using DTO.NSEntities;
 using DTO.P2PEntities.Messages;
 using P2PCommunicationLibrary;
 using P2PCommunicationLibrary.SimplePeers.ClientPeer;
@@ -15,7 +16,7 @@ namespace Client.UI.P2PCommunication
     {        
         public ClientPeer Peer { get; set; }        
 
-        public ClientPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEventHandler onMessageReceivedEvent)
+        public ClientPeerConnection(IPEndPoint superPeerEndPoint, MessageReceivedEvent onMessageReceivedEvent)
             : base(new JsonSerializer())
         {
             MessageReceivedEvent = onMessageReceivedEvent;
@@ -31,6 +32,7 @@ namespace Client.UI.P2PCommunication
 
         public override void Stop()
         {
+            IsListening = false;
             Peer.Close();
         }
 
@@ -58,6 +60,11 @@ namespace Client.UI.P2PCommunication
                     MessageReceivedEvent?.Invoke(UserId, (message as TextMessage).Text); // maybe need async?
                 }
             }
+        }
+
+        public override PeerAddressContract GetPeerAddress()
+        {
+            return new PeerAddressContract(Peer.GetPeerAddress());
         }
     }
 }

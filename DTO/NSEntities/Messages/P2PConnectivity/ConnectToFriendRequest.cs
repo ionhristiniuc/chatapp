@@ -9,6 +9,7 @@ namespace DTO.NSEntities.Messages.P2PConnectivity
     public class ConnectToFriendRequest : NSBaseMessage
     {
         public string UserId { get; set; }
+        public PeerAddressContract Address { get; set; }
 
         public ConnectToFriendRequest()
             : base(NSMessageTypeEnum.ConnectToFriendRequest)

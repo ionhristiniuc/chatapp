@@ -20,7 +20,6 @@ using DTO.NSEntities.Messages.Connectivity;
 using DTO.NSEntities.Messages.Contacts;
 using DTO.NSEntities.Messages.KeepAlive;
 using DTO.NSEntities.Messages.P2PConnectivity;
-using MessageReceivedEventHandler = Client.UI.P2PCommunication.MessageReceivedEventHandler;
 
 namespace Client.UI.NSClient
 {
@@ -108,7 +107,7 @@ namespace Client.UI.NSClient
             {
                 ObjectReceivedEvent?.Invoke(obj);
             }
-        }
+        }        
 
         private NSBaseMessage ReadObject()
         {
@@ -140,15 +139,15 @@ namespace Client.UI.NSClient
             _isWorking = false;
         }
 
-        public bool SendConnectToFriendRequest(string userId)
+        public bool SendConnectToFriendRequest(string userId, PeerAddressContract peerAddress)
         {
-            SendObject(new ConnectToFriendRequest() {UserId = userId});
+            SendObject(new ConnectToFriendRequest() {UserId = userId, Address = peerAddress});
             return true;
         }
 
-        public void SendAllowFriendToConnectResponse(string userId)
+        public void SendAllowFriendToConnectResponse(string userId, PeerAddressContract peerAddress)
         {
-            SendObject(new AllowFriendToConnectResponse() {Allowed = true, UserId = userId});
+            SendObject(new AllowFriendToConnectResponse() {Allowed = true, UserId = userId, PeerAddress = peerAddress});
         }
     }
 

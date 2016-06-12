@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Client.UI.NSClient;
 using CommunicationLibrary.Util.Serialization;
+using DTO.NSEntities;
 using DTO.P2PEntities.Messages;
 
 namespace Client.UI.P2PCommunication
@@ -19,7 +20,7 @@ namespace Client.UI.P2PCommunication
             _serializer = serializer;
         }
 
-        public MessageReceivedEventHandler MessageReceivedEvent { get; set; }
+        public MessageReceivedEvent MessageReceivedEvent { get; set; }
 
         public string UserId { get; set; }
 
@@ -50,5 +51,7 @@ namespace Client.UI.P2PCommunication
             var str = _serializer.Serialize(mess);
             return Encoding.UTF8.GetBytes(str);
         }
+
+        public abstract PeerAddressContract GetPeerAddress();
     }
 }

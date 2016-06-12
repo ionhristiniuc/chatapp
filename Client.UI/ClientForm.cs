@@ -25,6 +25,8 @@ namespace Client.UI
         private readonly Color _onlineColor = Color.LightGreen;
         private readonly Color _offlineColor = Color.White;
 
+        private Dictionary<string, string> _connectionMessages = new Dictionary<string, string>(); 
+
         public ClientForm(UserModel user)
         {                                
             InitializeComponent();            
@@ -42,15 +44,27 @@ namespace Client.UI
 
             _p2PConnectionsManager = new P2PConnectionsManager(_user, _nsConnection);
             _p2PConnectionsManager.MessageReceivedEvent += MessageReceivedHandler;
+            _p2PConnectionsManager.ConnectedToFriendEvent += P2PConnectionsManagerOnConnectedToFriendEvent;
 
             var progress = new Progress<IJob>(s => UpdateUI(s));
             Task.Factory.StartNew(() => _nsConnection.Process(progress),
                 TaskCreationOptions.LongRunning);
         }
 
+        private void P2PConnectionsManagerOnConnectedToFriendEvent(string userId)
+        {
+            var message = _connectionMessages[userId];
+
+            if (_p2PConnectionsManager.SendMessage(userId, message))
+            {
+                PrintMessage(_user.Id, message);
+                inputTextBox.Text = string.Empty;
+            }
+        }
+
         private void MessageReceivedHandler(string userId, string message)
         {
-            // should play with windows
+            // should play with windows            
             PrintMessage(userId, message);
         }
 
@@ -75,7 +89,8 @@ namespace Client.UI
         private void PopulateFriends()
         {
             usersListView.BeginUpdate();
-            _user.Friends.ForEach(u => usersListView.Items.Add(new ListViewItem() {Text = u.FirstName + " " + u.LastName, BackColor = _offlineColor, Name = u.Id} ));
+            _user.Friends.ForEach(u => usersListView.Items.Add(
+                new ListViewItem() {Text = u.FirstName + " " + u.LastName, BackColor = _offlineColor, Name = u.Id} ));
             usersListView.EndUpdate();
         }
 
@@ -114,6 +129,8 @@ namespace Client.UI
 
             if (!_p2PConnectionsManager.IsConnected(selectedUserId))
             {
+                _connectionMessages[selectedUserId] = message;
+
                 if (!_p2PConnectionsManager.StartConnectTo(selectedUserId))
                 {
                     MessageBox.Show("Failed to connect to " + selectedUserId);
@@ -137,8 +154,12 @@ namespace Client.UI
             if (string.IsNullOrWhiteSpace(message))
                 return;
 
-            messagesTextArea.Text = messagesTextArea.Text + '\n'
-                       + $"{userId}> {message}";
+            var user = _user.Id == userId ? _user : _user.Friends.First(u => u.Id == userId);
+
+            this.Invoke((MethodInvoker)delegate {
+                messagesTextArea.Text = messagesTextArea.Text + '\n'
+                       + $"{user.FirstName} {user.LastName}> {message}";
+            });            
         }
     }
 }

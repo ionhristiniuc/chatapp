@@ -18,7 +18,8 @@ namespace Client.UI.P2PCommunication
 {
     public class P2PConnectionsManager
     {
-        public event MessageReceivedEventHandler MessageReceivedEvent;
+        public event MessageReceivedEvent MessageReceivedEvent;
+        public event ConnectedToFriendEvent ConnectedToFriendEvent;
         private IList<P2PConnection> _connections = new List<P2PConnection>();
         private UserModel _user;
         private readonly NSConnection _nsConnection;
@@ -49,7 +50,10 @@ namespace Client.UI.P2PCommunication
 
         public bool StartConnectTo(string userId)
         {
-            return _nsConnection.SendConnectToFriendRequest(userId);
+            var conn = new ClientPeerConnection(_superPeerEndPoint, MessageReceivedEvent) { UserId = userId };
+            conn.Run();
+            _connections.Add(conn);
+            return _nsConnection.SendConnectToFriendRequest(userId, conn.GetPeerAddress());
         }
 
         private void NsConnectionOnObjectReceivedEvent(NSBaseMessage nsBaseMessage)
@@ -58,12 +62,9 @@ namespace Client.UI.P2PCommunication
             {
                 var resp = (ConnectToFriendResponse) nsBaseMessage;
                 var address = resp.Address.ToPeerAddress();
-                address.PrivateEndPoint.Port = 10020;
-                address.PublicEndPoint.Port = 10020;
-                var conn = new ClientPeerConnection(_superPeerEndPoint, MessageReceivedEvent) {UserId = resp.UserId};
-                conn.Run();
-                _connections.Add(conn);
+                var conn = (ClientPeerConnection) _connections.First(c => c.UserId == resp.UserId);
                 Task.Factory.StartNew(() => conn.Connect(address))
+                    .ContinueWith(t => ConnectedToFriendEvent?.Invoke(resp.UserId))
                     .ContinueWith(t => conn.ReadMessages());
             }
             else if (nsBaseMessage is AllowFriendToConnectRequest)
@@ -76,7 +77,7 @@ namespace Client.UI.P2PCommunication
                 Task.Factory.StartNew(() => conn.AllowConnection(address))
                     .ContinueWith(t => conn.ReadMessages());
                 //MessageBox.Show("P2PConMng - Sending allow friend to connect resp to " + req.UserId);
-                _nsConnection.SendAllowFriendToConnectResponse(req.UserId);                    
+                _nsConnection.SendAllowFriendToConnectResponse(req.UserId, conn.GetPeerAddress());                    
                 //Task.Factory.StartNew(() => conn.ReadMessages());                
             }
         }
@@ -87,5 +88,6 @@ namespace Client.UI.P2PCommunication
         }
     }
 
-    public delegate void MessageReceivedEventHandler(string userId, string message);
+    public delegate void MessageReceivedEvent(string userId, string message);
+    public delegate void ConnectedToFriendEvent(string userId);
 }
