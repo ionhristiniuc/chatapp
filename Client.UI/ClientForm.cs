@@ -40,7 +40,10 @@ namespace Client.UI
             {
                 UserId = f.Id, Input = string.Empty, TextArea = string.Empty
             });
-            PopulateFriends();            
+            PopulateFriends();
+
+            connectProgressBar.Hide();
+            connectProgressBar.Value = 0;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -66,11 +69,13 @@ namespace Client.UI
 
             if (_p2PConnectionsManager.SendMessage(userId, message))
             {
+                connectProgressBar.Value = 100;
                 PrintMessage(_user.Id, message);
                 this.Invoke((MethodInvoker) delegate
                 {
-                    inputTextBox.Text = string.Empty;
+                    inputTextBox.Text = string.Empty;                    
                 });
+                connectProgressBar.Hide();
             }
         }
 
@@ -89,7 +94,7 @@ namespace Client.UI
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Application.Exit();            
         }
 
         private void UpdateUI(IJob job)
@@ -141,12 +146,16 @@ namespace Client.UI
             if (!_p2PConnectionsManager.IsConnected(selectedUserId))
             {
                 _connectionMessages[selectedUserId] = message;
+                connectProgressBar.Show();
+                connectProgressBar.Value = 10;
 
                 if (!_p2PConnectionsManager.StartConnectTo(selectedUserId))
                 {
                     MessageBox.Show("Failed to connect to " + selectedUserId);
                     return;
                 }
+
+                connectProgressBar.Value = 15;
             }
             else
             {
